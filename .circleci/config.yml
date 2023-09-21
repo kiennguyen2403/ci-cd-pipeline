@@ -31,17 +31,17 @@ jobs:
           command: cd back-end && npm test
 
       # Deploy the application (you may need to customize this part)
-      - run:
-          name: Deploy Application
-          command: |
-            # Replace this with your deployment script/command
-            echo "Deploying the application..."
+      # - run:
+      #     name: Deploy Application
+      #     command: |
+      #       # Replace this with your deployment script/command
+      #       echo "Deploying the application..."
             
-            # For example, you could use a script to copy the frontend build to the backend's public folder
-            cp -r front-end/build back-end/public
+      #       # For example, you could use a script to copy the frontend build to the backend's public folder
+      #       cp -r front-end/build back-end/public
             
-            # Restart your Express.js server or use a process manager like PM2
-            cd back-end && pm2 restart index.js
+      #       # Restart your Express.js server or use a process manager like PM2
+      #       cd back-end && pm2 restart index.js
       # Deploy to AWS using Terraform (replace with your own Terraform commands)
       - setup_remote_docker:
           version: 20.10.7
