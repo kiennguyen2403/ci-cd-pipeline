@@ -30,6 +30,30 @@ jobs:
           name: Test Backend
           command: cd back-end && npm test
 
+  deploy_infrastructure:
+    docker:
+      - image: hashicorp/terraform:1.0.9
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Initialize Terraform and deploy infrastructure
+      - run:
+          name: Initialize Terraform
+          command: |
+            cd terraform
+            terraform init
+      - run:
+          name: Deploy Infrastructure
+          command: |
+            cd terraform
+            terraform apply -auto-approve
+
+
+        
+
       # Deploy the application (you may need to customize this part)
       # - run:
       #     name: Deploy Application
