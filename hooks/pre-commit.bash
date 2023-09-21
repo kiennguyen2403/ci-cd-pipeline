@@ -2,6 +2,7 @@
 
 # Run unit tests before committing
 echo "Running unit tests..."
+cd back-end
 npm test
 
 # Capture the exit code of the tests
