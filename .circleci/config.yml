@@ -11,12 +11,37 @@ jobs:
 
       # Install dependencies and run tests (you can add your own tests)
       - run:
-          name: Install Dependencies
-          command: npm install
+          name: Install Frontend Dependencies
+          command: cd front-end && npm install
       - run:
-          name: Run Tests
-          command: npm test
+          name: Build Frontend
+          command: cd front-end && npm run build
+      - save_cache:
+          key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./front-end/node_modules
+        # Install and test the Express.js backend
+      - restore_cache:
+          key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Install Backend Dependencies
+          command: cd back-end && npm install
+      - run:
+          name: Test Backend
+          command: cd back-end && npm test
 
+      # Deploy the application (you may need to customize this part)
+      - run:
+          name: Deploy Application
+          command: |
+            # Replace this with your deployment script/command
+            echo "Deploying the application..."
+            
+            # For example, you could use a script to copy the frontend build to the backend's public folder
+            cp -r front-end/build back-end/public
+            
+            # Restart your Express.js server or use a process manager like PM2
+            cd back-end && pm2 restart index.js
       # Deploy to AWS using Terraform (replace with your own Terraform commands)
       - setup_remote_docker:
           version: 20.10.7
