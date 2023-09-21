@@ -43,10 +43,10 @@ jobs:
       #       # Restart your Express.js server or use a process manager like PM2
       #       cd back-end && pm2 restart index.js
       # Deploy to AWS using Terraform (replace with your own Terraform commands)
-      - setup_remote_docker:
-          version: 20.10.7
-      - run:
-          name: Deploy to AWS
-          command: |
-            terraform init
-            terraform apply -auto-approve
+      # - setup_remote_docker:
+      #     version: 20.10.7
+      # - run:
+      #     name: Deploy to AWS
+      #     command: |
+      #       terraform init
+      #       terraform apply -auto-approve
