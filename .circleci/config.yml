@@ -31,8 +31,7 @@ jobs:
           name: Test Backend
           command: cd back-end && npm test
       - store_test_results:
-          path: 
-          - ./test-results
+          path: ./test-results
   deploy_infrastructure:
     docker:
       - image: hashicorp/terraform:1.0.9
