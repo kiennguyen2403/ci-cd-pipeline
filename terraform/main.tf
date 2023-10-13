@@ -27,7 +27,7 @@ locals {
 }
 
 module "app" {
-  source     = "./variables.tf"
+  source     = "/"
   name       = local.app_name
   stage_name = local.stage_name
 
