@@ -1,5 +1,6 @@
 variable "name" {
   type        = string
+  default     = null
   description = "Name of the App"
 }
 
@@ -59,6 +60,7 @@ variable "s3_access_logs_bucket" {
 
 variable "tags" {
   type        = map(any)
+  default     = {}
   description = "Resource tags to be attached to all resources."
 }
 
