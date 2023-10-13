@@ -27,7 +27,7 @@ locals {
 }
 
 module "app" {
-  source     = "../../"
+  source     = "./"
   name       = local.app_name
   stage_name = local.stage_name
 
@@ -36,7 +36,7 @@ module "app" {
 
     description = "Sample Frontend App"
     entrypoint  = "index.html"
-    source      = "${path.module}/frontend/public"
+    source      = "${path.module}/front-end/public"
   }
 
   backend = {
