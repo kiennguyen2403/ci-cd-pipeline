@@ -25,20 +25,9 @@ jobs:
           command: |
             npx wait-on http://localhost:3000
           when: always
-  test_frontend:
-    docker:
-      - image: circleci/node:14
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
       - run:
-          name: Install Frontend Dependencies
-          command: cd front-end && npm install
-      # - run:
-      #     name: Test Frontend
-      #     command: cd front-end  && npm test
+          name: Test Frontend
+          command: cd front-end  && npm test
       - save_cache:
           key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -59,16 +48,6 @@ jobs:
       - run:
           name: Install Backend Dependencies
           command: cd back-end && npm install
-
-  test_backend:
-    docker:
-      - image: circleci/node:14
-
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-
       - run:
           name: Install Backend Dependencies
           command: cd back-end && npm install
@@ -100,9 +79,6 @@ jobs:
             cd iac
             terraform apply -auto-approve
 
-
-        
-
       # Deploy the application (you may need to customize this part)
       # - run:
       #     name: Deploy Application
@@ -133,26 +109,14 @@ workflows:
           filters:
             branches:
               only: main
-      - test_frontend:
-          requires:
-            - build_frontend
-          filters:
-            branches:
-              only: main
       - build_backend:
-          filters:
-            branches:
-              only: main
-      - test_backend:
-          requires:
-            - build_backend
           filters:
             branches:
               only: main
       - deploy_infrastructure:
           requires:
-            - test_backend
-            - test_frontend
+            - build_backend
+            - build_frontend
           filters:
             branches:
               only: main
