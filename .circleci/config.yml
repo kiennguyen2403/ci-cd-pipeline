@@ -72,13 +72,13 @@ jobs:
       - run:
           name: Initialize Terraform
           command: |
-            cd iac
+            cd terraform
             terraform init
       - run:
           name: Deploy Infrastructure
           command: |
-            cd iac
-            terraform apply -auto-approve
+            cd terraform
+            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve
 
       # Deploy the application (you may need to customize this part)
       # - run:
