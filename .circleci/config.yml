@@ -23,7 +23,9 @@ jobs:
       - run:
           name: Wait for Server
           command: |
-            npx wait-on http://localhost:3000
+            while ! nc -z localhost 3000; do
+              sleep 1
+            done
           when: always
       - run:
           name: Test Frontend
