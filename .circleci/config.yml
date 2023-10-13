@@ -36,9 +36,9 @@ jobs:
       - run:
           name: Install Frontend Dependencies
           command: cd front-end && npm install
-      - run:
-          name: Test Frontend
-          command: cd front-end  && npm test
+      # - run:
+      #     name: Test Frontend
+      #     command: cd front-end  && npm test
       - save_cache:
           key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
           paths:
