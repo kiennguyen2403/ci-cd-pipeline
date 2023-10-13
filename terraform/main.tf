@@ -82,11 +82,3 @@ data "archive_file" "modules" {
   excludes    = ["nodejs/index.js", "nodejs/package-lock.json", "nodejs/package.json"]
   output_path = "${path.module}/layer.zip"
 }
-
-output "frontend_storage" {
-  value = module.app.frontend_storage
-}
-
-output "deployment" {
-  value = module.app.deployment
-}
