@@ -19,7 +19,6 @@ jobs:
       - run:
           name: Run Frontend
           command: cd front-end  && npm start
-          background: true
       - run:
           name: Wait for Server
           command: |
