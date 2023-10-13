@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "chromedriver": "^117.0.3",
     "geckodriver": "^4.2.1",
+    "grunt-cli": "^1.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
@@ -19,7 +20,7 @@
     "build": "react-scripts build",
     "test": "mocha test --timeout 10000",
     "eject": "react-scripts eject",
-    "start-and-test": "npm start && npm test",
+    "start-and-test": "npm-run-all --serial start test",
     "s-test": "mocha test"
   },
   "eslintConfig": {
@@ -41,6 +42,9 @@
     ]
   },
   "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-shell": "^4.0.0",
     "mocha": "^10.2.0"
   }
 }
