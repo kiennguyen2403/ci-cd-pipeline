@@ -16,16 +16,16 @@ jobs:
       - run:
           name: Build Frontend
           command: cd front-end && npm run build
-      - run:
-          name: Run Frontend
-          command: cd front-end  && npm start
-      - run:
-          name: Wait for Server
-          command: |
-            while ! nc -z localhost 3000; do
-              sleep 1
-            done
-          when: always
+      # - run:
+      #     name: Run Frontend
+      #     command: cd front-end  && npm start
+      # - run:
+      #     name: Wait for Server
+      #     command: |
+      #       while ! nc -z localhost 3000; do
+      #         sleep 1
+      #       done
+      #     when: always
       - run:
           name: Test Frontend
           command: cd front-end  && npm test
