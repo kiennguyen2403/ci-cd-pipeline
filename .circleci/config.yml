@@ -21,6 +21,11 @@ jobs:
           command: cd front-end  && npm start
           background: true
       - run:
+          name: Wait for Server
+          command: |
+            npx wait-on http://localhost:3000
+          when: always
+      - run:
           name: Test Frontend
           command: cd front-end  && npm test
       - save_cache:
