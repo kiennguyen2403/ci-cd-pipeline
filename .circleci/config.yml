@@ -16,6 +16,7 @@ jobs:
       - run:
           name: Run Frontend
           command: cd front-end  && npm start
+          background: true
       - run:
           name: Test Frontend
           command: cd front-end  && npm test
