@@ -145,7 +145,7 @@ workflows:
               only: main
       - deploy_infrastructure:
           requires:
-            - test
+            - test_backend
           filters:
             branches:
               only: main
