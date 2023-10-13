@@ -61,7 +61,7 @@ jobs:
 
   deploy_infrastructure:
     docker:
-      - image: hashicorp/terraform:1.2.0
+      - image: hashicorp/terraform:latest
 
     working_directory: ~/repo
 
