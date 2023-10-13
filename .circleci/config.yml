@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/node:14
 
@@ -13,6 +13,9 @@ jobs:
       - run:
           name: Install Frontend Dependencies
           command: cd front-end && npm install
+      - run:
+          name: Test Frontend
+          command: cd front-end && npm test
       - run:
           name: Build Frontend
           command: cd front-end && npm run build
@@ -45,12 +48,12 @@ jobs:
       - run:
           name: Initialize Terraform
           command: |
-            cd terraform
+            cd iac
             terraform init
       - run:
           name: Deploy Infrastructure
           command: |
-            cd terraform
+            cd iac
             terraform apply -auto-approve
 
 
@@ -76,3 +79,20 @@ jobs:
       #     command: |
       #       terraform init
       #       terraform apply -auto-approve
+
+
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only: main
+      - deploy_infrastructure:
+          requires:
+            - test
+          filters:
+            branches:
+              only: main
+```

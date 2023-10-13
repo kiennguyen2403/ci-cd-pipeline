@@ -6,7 +6,7 @@ var webdriver = require("selenium-webdriver");
 require("geckodriver");
 // Application Server
 const serverUri = "http://localhost:3000/#";
-const appTitle = "React Selenium App";
+const appTitle = "React App";
 /**
  * Config for Chrome browser
  * @type {webdriver}
@@ -78,6 +78,7 @@ describe("Home Page", function() {
   * End of test cases use.
   * Closing the browser and exit.
   */
+ // eslint-disable-next-line no-undef
  after(function() {
   // End of test use this.
   browser.quit();
