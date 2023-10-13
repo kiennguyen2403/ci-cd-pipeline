@@ -14,8 +14,11 @@ jobs:
           name: Install Frontend Dependencies
           command: cd front-end && npm install
       - run:
+          name: Run Frontend
+          command: cd front-end  && npm start
+      - run:
           name: Test Frontend
-          command: cd front-end && npm test
+          command: cd front-end  && npm test
       - run:
           name: Build Frontend
           command: cd front-end && npm run build

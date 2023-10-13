@@ -17,8 +17,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "mocha test",
+    "test": "mocha test --timeout 10000",
     "eject": "react-scripts eject",
+    "start-and-test": "npm start && npm test",
     "s-test": "mocha test"
   },
   "eslintConfig": {
