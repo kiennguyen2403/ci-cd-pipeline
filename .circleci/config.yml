@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  test:
+  build_frontend:
     docker:
       - image: circleci/node:14
 
@@ -25,6 +25,15 @@ jobs:
           command: |
             npx wait-on http://localhost:3000
           when: always
+  test_frontend:
+    docker:
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
       - run:
           name: Test Frontend
           command: cd front-end  && npm test
@@ -36,14 +45,34 @@ jobs:
         # Install and test the Express.js backend
       - restore_cache:
           key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
+  build_backend:
+    docker:
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
       - run:
           name: Install Backend Dependencies
           command: cd back-end && npm install
+
+  test_backend:
+    docker:
+      - image: circleci/node:14
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
       - run:
           name: Test Backend
           command: cd back-end && npm test
       - store_test_results:
           path: ../../../test-results
+
   deploy_infrastructure:
     docker:
       - image: hashicorp/terraform:1.0.9
@@ -94,7 +123,23 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      - test:
+      - build_frontend:
+          filters:
+            branches:
+              only: main
+      - test_frontend:
+          filters:
+            branches:
+              only: main
+      - build_backend:
+          requires:
+            - test_frontend
+          filters:
+            branches:
+              only: main
+      - test_backend:
+          requires:
+            - build_backend
           filters:
             branches:
               only: main
