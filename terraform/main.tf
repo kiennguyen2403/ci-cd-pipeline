@@ -27,7 +27,7 @@ locals {
 }
 
 module "app" {
-  source     = "/"
+  source     = "../../"
   name       = local.app_name
   stage_name = local.stage_name
 
