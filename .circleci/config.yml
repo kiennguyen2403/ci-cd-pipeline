@@ -33,7 +33,9 @@ jobs:
 
     steps:
       - checkout
-
+      - run:
+          name: Install Frontend Dependencies
+          command: cd front-end && npm install
       - run:
           name: Test Frontend
           command: cd front-end  && npm test
@@ -66,6 +68,10 @@ jobs:
 
     steps:
       - checkout
+
+      - run:
+          name: Install Backend Dependencies
+          command: cd back-end && npm install
 
       - run:
           name: Test Backend
@@ -134,8 +140,6 @@ workflows:
             branches:
               only: main
       - build_backend:
-          requires:
-            - test_frontend
           filters:
             branches:
               only: main
@@ -148,6 +152,7 @@ workflows:
       - deploy_infrastructure:
           requires:
             - test_backend
+            - test_frontend
           filters:
             branches:
               only: main
