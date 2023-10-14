@@ -1,27 +1,28 @@
 {
-  "name": "front-end",
+  "name": "trading-platform",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "chromedriver": "^117.0.3",
-    "geckodriver": "^4.2.1",
-    "grunt-cli": "^1.4.3",
+    "antd": "^5.8.4",
+    "axios": "^1.5.1",
     "react": "^18.2.0",
+    "react-cookie": "^6.1.1",
     "react-dom": "^18.2.0",
-    "react-scripts": "^5.0.1",
-    "selenium-webdriver": "^4.13.0",
+    "react-multi-select-component": "^4.3.4",
+    "react-router-dom": "^6.15.0",
+    "react-scripts": "5.0.1",
+    "react-select": "^5.7.4",
+    "styled-components": "^6.0.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "start-and-test": "npm-run-all --serial start test",
-    "s-test": "mocha test"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -42,9 +43,6 @@
     ]
   },
   "devDependencies": {
-    "grunt": "^1.6.1",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-shell": "^4.0.0",
-    "mocha": "^10.2.0"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
