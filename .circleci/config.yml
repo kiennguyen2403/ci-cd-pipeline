@@ -70,25 +70,24 @@ jobs:
           command: |
             cd terraform
             terraform init
-      - run:
-          name: Deploy Infrastructure
-          command: |
-            cd terraform
-            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve
-
+      # - run:
+      #     name: Deploy Infrastructure
+      #     command: |
+      #       cd terraform
+      #       AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve
      
-  # build_application:
-  #   docker:
-  #     - image: docker:20.10.7
-  #   working_directory: ~/repo
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker:
-  #         version: 20.10.7
-  #     - run:
-  #         name: Build and Push Docker Image
-  #         command: |
-  #           cd docker && docker-compose build
+  build_application:
+    docker:
+      - image: docker:20.10.7
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Build and Push Docker Image
+          command: |
+            cd docker && docker-compose build
       
 
 workflows:
@@ -96,23 +95,23 @@ workflows:
   test-deploy:
     jobs:
       - test_frontend:
-          # filters:
-          #   branches:
-          #     only: main
+          filters:
+            branches:
+              only: main
       - test_backend:
-          # filters:
-          #   branches:
-          #     only: main
+          filters:
+            branches:
+              only: main
       - deploy_infrastructure:
           requires:
             - build_backend
             - build_frontend
-          # filters:
-          #   branches:
-          #     only: main
+          filters:
+            branches:
+              only: main
       - build_application:
           requires:
             - deploy_infrastructure
-          # filters:
-          #   branches:
-          #     only: main
+          filters:
+            branches:
+              only: main
