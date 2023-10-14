@@ -110,16 +110,16 @@ workflows:
           filters:
             branches:
               only: main
-      - deploy_infrastructure:
+      - build_application:
           requires:
             - test_backend
             - test_frontend
           filters:
             branches:
               only: main
-      - build_application:
+      - deploy_infrastructure:
           requires:
-            - deploy_infrastructure
+            - build_application
           filters:
             branches:
               only: main
