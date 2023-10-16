@@ -9,16 +9,15 @@ services:
     volumes:
       - ./sql-scripts/create_database.sql:/docker-entrypoint-initdb.d/1.sql
   backend:
-    build:
-      context: .././back-end  # Specify the path to your backend Dockerfile and application code
+    image: tuandoan1411/web3-trading-platform-backend:v1
     ports:
-      - "8000:8000"  # Expose the backend port
+      - "8000:8000"
     depends_on:
       - db
 
+
   frontend:
-    build:
-      context: .././front-end  # Specify the path to your frontend Dockerfile and application code
+    image: tuandoan1411/web3-trading-platform-frontend:v1
     ports:
       - "3000:3000"  # Expose the frontend port
     depends_on:
