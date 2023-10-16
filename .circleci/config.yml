@@ -72,13 +72,13 @@ jobs:
           name: Run Docker Image
           command: |
             cd docker && docker-compose up -d
-      - run:
-          name: Wait for Server
-          command: |
-            while ! nc -z localhost 3000; do
-              sleep 1
-            done
-          when: always
+      # - run:
+      #     name: Wait for Server
+      #     command: |
+      #       while ! nc -z localhost 3000; do
+      #         sleep 1
+      #       done
+      #     when: always
       # - run:
       #     name: Test Integration
       #     command: |
