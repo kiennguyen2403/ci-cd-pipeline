@@ -15,41 +15,23 @@ provider "aws" {
   region  = "ap-southeast-2"
 }
 
+resource "aws_key_pair" "my_key" {
+  key_name   = "my-key"
+  public_key = file("C:\Users\BRAVO\.ssh\ass2keypair.pem")
+}
+
 resource "aws_instance" "app" {
   ami           = "ami-0e812285fd54f7620"
   instance_type = "t2.micro"
+  key_name      = aws_key_pair.my_key.key_name
 
   tags = {
     Name = "ExampleAppServerInstance"
   }
-}
 
-# Open SSH port
-resource "aws_security_group" "example" {
-  name        = "example"
-  description = "Example security group"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Provision the instance
-resource "null_resource" "docker" {
-  triggers = {
-    instance_id = aws_instance.app.id
-  }
-
-  connection {
-    type        = "ssh"
-    host        = aws_instance.app.public_ip
-    user        = "ec2-user"
-  }
 
   provisioner "remote-exec" {
+    
     inline = [
       "sudo yum update -y",
       "sudo amazon-linux-extras install docker",
@@ -59,28 +41,12 @@ resource "null_resource" "docker" {
       "sudo systemctl start docker",
       "sudo yum install -y docker-compose",
     ]
-  }
+    
+    connection {
+    type = "ssh"
+    user = "ec2-user"
+    private_key = file("C:\Users\BRAVO\.ssh\ass2keypair.pem")
+    host = self.public_ip
+    }
 }
 
-# Define Docker Compose configuration
-resource "null_resource" "docker_run" {
-  depends_on = [null_resource.docker]
-
-  connection {
-    type        = "ssh"
-    host        = aws_instance.app.public_ip
-    user        = "ec2-user"
-  }
-
-  provisioner "file" {
-    source      = "../docker/docker-compose.yml"  # Replace with your Docker Compose file
-    destination = "/home/ec2-user/docker-compose.yml"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "cd /home/ec2-user",
-      "docker-compose up -d",
-    ]
-  }
-}
