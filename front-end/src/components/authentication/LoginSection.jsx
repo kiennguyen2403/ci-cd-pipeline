@@ -127,7 +127,7 @@ const LoginSection = ({authStatus, setAuthStatus}) => {
                 <Link to="/login">Forgot Password?</Link>
             </div> */}
             {/* Login Button */}
-            <button type ="submit" className="btn-submit" > login</button>
+            <button type ="submit" className="btn-submit" > l</button>
         </form>
     );
 }
