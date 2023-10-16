@@ -83,10 +83,10 @@ jobs:
       #     name: Test Integration
       #     command: |
       #       cd integration-test && npm install && npm test
-      - run:
-          name: Tag Docker Image
-          command: |
-            cd docker && docker tag docker_app:latest $DOCKER_USERNAME/docker_app:latest
+      # - run:
+      #     name: Tag Docker Image
+      #     command: |
+      #       cd docker && docker tag docker_app:latest $DOCKER_USERNAME/docker_app:latest
       - run:
           name: Login to Docker Hub
           command: |
