@@ -1,84 +1,74 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 4.16"
-    }
-  }
+# main.tf
 
-  required_version = ">= 1.2.0"
-}
 provider "aws" {
-  region = "us-east-1"
+  region = "us-east-1"  # Change this to your desired AWS region
 }
 
-resource "random_pet" "app_name" {}
-resource "random_pet" "backend_name" {}
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
+  instance_type = "t2.micro"
+  key_name      = "your-key-name"  # Replace with your AWS key pair
+}
 
-locals {
-  stage_name = "dev"
+# Open SSH port
+resource "aws_security_group" "example" {
+  name        = "example"
+  description = "Example security group"
 
-  app_name = random_pet.app_name.id
-  api_name = random_pet.backend_name.id
-
-  tags = {
-    Name = "${local.app_name}-${local.stage_name}"
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-module "app" {
-  source     = "../../"
-  name       = local.app_name
-  stage_name = local.stage_name
-
-  frontend = {
-    path = "/"
-
-    description = "Sample Frontend App"
-    entrypoint  = "index.html"
-    source      = "${path.module}/front-end/public"
+# Provision the instance
+resource "null_resource" "docker" {
+  triggers = {
+    instance_id = aws_instance.example.id
   }
 
-  backend = {
-    path = "/api"
-
-    name        = local.api_name
-    description = "Sample API"
-
-    source     = "${data.archive_file.backend.output_path}"
-    entrypoint = "index.handler"
-    runtime    = "nodejs14.x"
-    memory_mb  = 128
-
-    modules = [{
-      source  = "${data.archive_file.modules.output_path}"
-      runtime = "nodejs14.x"
-    }]
+  connection {
+    type        = "ssh"
+    host        = aws_instance.example.public_ip
+    user        = "ec2-user"
+    private_key = file("~/.ssh/your-key.pem")
   }
 
-  enable_access_logging    = true
-  enable_execution_logging = true
-
-  tags = local.tags
-
-  depends_on = [
-    data.archive_file.backend,
-    data.archive_file.modules
-  ]
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum update -y",
+      "sudo amazon-linux-extras install docker",
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker",
+      "sudo usermod -aG docker ec2-user",
+      "sudo systemctl start docker",
+      "sudo yum install -y docker-compose",
+    ]
+  }
 }
 
-data "archive_file" "backend" {
-  type = "zip"
+# Define Docker Compose configuration
+resource "null_resource" "docker_run" {
+  depends_on = [null_resource.docker]
 
-  source_dir  = "${path.module}/backend/nodejs"
-  excludes    = setunion(fileset("${path.module}/backend/nodejs", "node_modules/**"))
-  output_path = "${path.module}/backend.zip"
-}
+  connection {
+    type        = "ssh"
+    host        = aws_instance.example.public_ip
+    user        = "ec2-user"
+    private_key = file("~/.ssh/your-key.pem")
+  }
 
-data "archive_file" "modules" {
-  type = "zip"
+  provisioner "file" {
+    source      = "docker-compose.yml"  # Replace with your Docker Compose file
+    destination = "/home/ec2-user/docker-compose.yml"
+  }
 
-  source_dir  = "${path.module}/backend"
-  excludes    = ["nodejs/index.js", "nodejs/package-lock.json", "nodejs/package.json"]
-  output_path = "${path.module}/layer.zip"
+  provisioner "remote-exec" {
+    inline = [
+      "cd /home/ec2-user",
+      "docker-compose up -d",
+    ]
+  }
 }

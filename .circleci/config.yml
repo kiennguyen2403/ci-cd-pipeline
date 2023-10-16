@@ -64,17 +64,37 @@ jobs:
       - setup_remote_docker:
           version: 20.10.23
           docker_layer_caching: true
-      # - run:
-      #     name: Install Docker Compose'
-      #     command: |
-      #       curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
-      #       chmod +x ~/docker-compose
-      #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-
       - run:
-          name: Build and Push Docker Image
+          name: Build Docker Image
           command: |
             cd docker && docker-compose build
+      - run:
+          name: Run Docker Image
+          command: |
+            cd docker && docker-compose up -d
+      - run:
+          name: Wait for Server
+          command: |
+            while ! nc -z localhost 3000; do
+              sleep 1
+            done
+          when: always
+      # - run:
+      #     name: Test Integration
+      #     command: |
+      #       cd integration-test && npm install && npm test
+      - run:
+          name: Tag Docker Image
+          command: |
+            cd docker && docker tag docker_app:latest $DOCKER_USERNAME/docker_app:latest
+      - run:
+          name: Login to Docker Hub
+          command: |
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - run:
+          name: Push Docker Image
+          command: |
+            cd docker && docker-compose push
 
   deploy_infrastructure:
     docker:
@@ -91,13 +111,17 @@ jobs:
           command: |
             cd terraform
             terraform init
-      # - run:
-      #     name: Deploy Infrastructure
-      #     command: |
-      #       cd terraform
-      #       AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve
+      - run:
+          name: Deploy Infrastructure
+          command: |
+            cd terraform
+            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve
+      - run:
+          name: Deploy Application into Infrastructure
+          command: |
+            cd terraform
+            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve -target=module.app
      
-      
 
 workflows:
   version: 2
