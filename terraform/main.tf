@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "my_key" {
-  key_name   = "my-key"
+  key_name   = "ass2keypair"
   public_key = file("ass2keypair.pem")
 }
 
