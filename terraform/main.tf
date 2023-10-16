@@ -71,7 +71,7 @@ resource "null_resource" "docker_run" {
     source      = "../docker/docker-compose.yml"  # Replace with your Docker Compose file
     destination = "/home/ec2-user/docker-compose.yml"
   }
-
+  # comment
   provisioner "remote-exec" {
     inline = [
       "cd /home/ec2-user",
