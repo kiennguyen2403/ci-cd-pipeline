@@ -1,3 +1,4 @@
+Kiên Nguyễn
 version: 2.1
 jobs:
   test_frontend:
@@ -29,10 +30,10 @@ jobs:
       - run:
           name: Test Frontend
           command: cd front-end  && npm test
-      # - save_cache:
-      #     key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
-      #     paths:
-      #       - ./front-end/node_modules
+      - save_cache:
+          key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./front-end/node_modules
 
       #   # Install and test the Express.js backend
       # - restore_cache:
@@ -93,10 +94,10 @@ jobs:
           name: Login to Docker Hub
           command: |
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - run:
-          name: Push Docker Image
-          command: |
-            docker push $DOCKER_REGISTRY:latest
+      # - run:
+      #     name: Push Docker Image
+      #     command: |
+      #       docker push $DOCKER_REGISTRY:latest
 
   deploy_infrastructure:
     docker:
@@ -144,7 +145,6 @@ workflows:
       - build_application:
           requires:
             - test_frontend
-            - test_backend
           filters:
             branches:
               only: main
