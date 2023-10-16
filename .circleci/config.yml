@@ -67,7 +67,7 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            cd front-end && docker build -t docker_app:latest .
+            cd front-end && docker build --platform linux/arm64 -t docker_app:latest .
 
 
       # - run:
