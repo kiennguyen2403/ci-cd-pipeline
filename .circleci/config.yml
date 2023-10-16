@@ -13,12 +13,12 @@ jobs:
       - run:
           name: Install Frontend Dependencies
           command: cd front-end && npm install
-      # - run:
-      #     name: Build Frontend
-      #     command: cd front-end && npm run build
-      # - run:
-      #     name: Run Frontend
-      #     command: cd front-end  && npm start
+      - run:
+          name: Build Frontend
+          command: cd front-end && npm run build
+      - run:
+          name: Run Frontend
+          command: cd front-end  && npm start
       # - run:
       #     name: Wait for Server
       #     command: |
@@ -26,17 +26,17 @@ jobs:
       #         sleep 1
       #       done
       #     when: always
-      # - run:
-      #     name: Test Frontend
-      #     command: cd front-end  && npm test
-      - save_cache:
-          key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - ./front-end/node_modules
+      - run:
+          name: Test Frontend
+          command: cd front-end  && npm test
+      # - save_cache:
+      #     key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
+      #     paths:
+      #       - ./front-end/node_modules
 
-        # Install and test the Express.js backend
-      - restore_cache:
-          key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
+      #   # Install and test the Express.js backend
+      # - restore_cache:
+      #     key: frontend-deps-{{ .Environment.CIRCLE_SHA1 }}
   test_backend:
     docker:
       - image: circleci/node:14
@@ -67,11 +67,13 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            cd docker && docker-compose build
-      - run:
-          name: Run Docker Image
-          command: |
-            cd docker && docker-compose up -d
+            cd front-end && docker build -t docker_app:latest . && docker tag docker_app:latest $DOCKER_REGISTRY:latest
+
+
+      # - run:
+      #     name: Run Docker Image
+      #     command: |
+      #       cd docker && docker-compose up -d
       # - run:
       #     name: Wait for Server
       #     command: |
@@ -94,7 +96,7 @@ jobs:
       - run:
           name: Push Docker Image
           command: |
-            cd docker && docker-compose push
+            docker push $DOCKER_REGISTRY:latest
 
   deploy_infrastructure:
     docker:
@@ -116,35 +118,46 @@ jobs:
           command: |
             cd terraform
             AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve
-      - run:
-          name: Deploy Application into Infrastructure
-          command: |
-            cd terraform
-            AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve -target=module.app
-     
 
+  #     - run:
+  #         name: Deploy Application into Infrastructure
+  #         command: |
+  #           cd terraform
+  #           AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve -target=module.app
+  # deploy_application:
+  #   docker:
+  #     - image: amazon/aws-cli
+  #   working_directory: ~/repo
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Deploy Application into Infrastructure
+  #         command: |
+  #           AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY 
 workflows:
   version: 2
   test-deploy:
     jobs:
-      - test_frontend:
-          filters:
-            branches:
-              only: main
-      - test_backend:
-          filters:
-            branches:
-              only: main
-      - build_application:
-          requires:
-            - test_backend
-            - test_frontend
-          filters:
-            branches:
-              only: main
+      # - test_frontend:
+      #     filters:
+      #       branches:
+      #         only: main
+      # - build_application:
+      #     requires:
+      #       - test_frontend
+      #       - test_backend
+      #     filters:
+      #       branches:
+      #         only: main
       - deploy_infrastructure:
-          requires:
-            - build_application
+          # requires:
+          #   - build_application
           filters:
             branches:
               only: main
+      # - deploy_application:
+      #     requires:
+      #       - build_application
+      #     filters:
+      #       branches:
+      #         only: main
