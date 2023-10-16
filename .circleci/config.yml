@@ -96,7 +96,7 @@ jobs:
       - run:
           name: Push Docker Image
           command: |
-            docker push $DOCKER_REGISTRY:latest
+            docker push kiennguyendev/ci-cd:latest
 
   deploy_infrastructure:
     docker:
