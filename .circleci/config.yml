@@ -154,9 +154,9 @@ workflows:
           filters:
             branches:
               only: main
-      - deploy_application:
-          requires:
-            - build_application
-          filters:
-            branches:
-              only: main
+      # - deploy_application:
+      #     requires:
+      #       - build_application
+      #     filters:
+      #       branches:
+      #         only: main
