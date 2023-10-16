@@ -89,7 +89,7 @@ const LoginSection = ({authStatus, setAuthStatus}) => {
 
     return (
         <form method="POST" onSubmit={handleSubmit} className="form-container" id="login-form">
-            <h2>Account Login</h2>
+            <h2>Dang Nhap</h2>
             {/* Username Input */}
             <label className="label-form" htmlFor="email">Email</label>
             <input className="ipt-form"
