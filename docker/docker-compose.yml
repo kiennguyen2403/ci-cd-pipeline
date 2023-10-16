@@ -17,7 +17,7 @@ services:
 
 
   frontend:
-    image: kiennguyen/ci-cd:latest
+    image: kiennguyendev/ci-cd:latest
     ports:
       - "3000:3000"  # Expose the frontend port
     depends_on:
