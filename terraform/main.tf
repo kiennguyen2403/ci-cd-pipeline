@@ -48,5 +48,6 @@ resource "aws_instance" "app" {
     private_key = file("C:\\Users\\BRAVO\\.ssh\\ass2keypair.pem")
     host = self.public_ip
     }
+  }
 }
 
