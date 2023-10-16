@@ -17,7 +17,7 @@ provider "aws" {
 
 resource "aws_key_pair" "my_key" {
   key_name   = "my-key"
-  public_key = file("C:\Users\BRAVO\.ssh\ass2keypair.pem")
+  public_key = file("C:\\Users\\BRAVO\\.ssh\\ass2keypair.pem")
 }
 
 resource "aws_instance" "app" {
@@ -45,7 +45,7 @@ resource "aws_instance" "app" {
     connection {
     type = "ssh"
     user = "ec2-user"
-    private_key = file("C:\Users\BRAVO\.ssh\ass2keypair.pem")
+    private_key = file("C:\\Users\\BRAVO\\.ssh\\ass2keypair.pem")
     host = self.public_ip
     }
 }
