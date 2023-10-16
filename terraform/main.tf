@@ -7,7 +7,6 @@ provider "aws" {
 resource "aws_instance" "example" {
   ami           = "ami-0c55b159cbfafe1f0"  # Replace with your desired AMI ID
   instance_type = "t2.micro"
-  key_name      = "your-key-name"  # Replace with your AWS key pair
 }
 
 # Open SSH port
@@ -33,7 +32,6 @@ resource "null_resource" "docker" {
     type        = "ssh"
     host        = aws_instance.example.public_ip
     user        = "ec2-user"
-    private_key = file("~/.ssh/your-key.pem")
   }
 
   provisioner "remote-exec" {
@@ -57,11 +55,10 @@ resource "null_resource" "docker_run" {
     type        = "ssh"
     host        = aws_instance.example.public_ip
     user        = "ec2-user"
-    private_key = file("~/.ssh/your-key.pem")
   }
 
   provisioner "file" {
-    source      = "docker-compose.yml"  # Replace with your Docker Compose file
+    source      = "../docker/docker-compose.yml"  # Replace with your Docker Compose file
     destination = "/home/ec2-user/docker-compose.yml"
   }
 
