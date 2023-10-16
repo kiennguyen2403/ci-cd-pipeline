@@ -18,7 +18,7 @@ provider "aws" {
 resource "aws_instance" "app" {
   ami           = "ami-0e812285fd54f7620"
   instance_type = "t2.micro"
-  key_name      = ass2keypair
+  key_name      = "ass2keypair"
 
   tags = {
     Name = "ExampleAppServerInstance"
