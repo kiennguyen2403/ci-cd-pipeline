@@ -16,9 +16,9 @@ jobs:
       - run:
           name: Build Frontend
           command: cd front-end && npm run build
-      - run:
-          name: Run Frontend
-          command: cd front-end  && npm start
+      # - run:
+      #     name: Run Frontend
+      #     command: cd front-end  && npm start
       # - run:
       #     name: Wait for Server
       #     command: |
@@ -141,9 +141,14 @@ workflows:
           filters:
             branches:
               only: main
+      - test_backend:
+          filters:
+            branches:
+              only: main
       - build_application:
           requires:
             - test_frontend
+            - test_backend
           filters:
             branches:
               only: main
