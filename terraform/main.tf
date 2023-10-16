@@ -15,15 +15,10 @@ provider "aws" {
   region  = "ap-southeast-2"
 }
 
-resource "aws_key_pair" "my_key" {
-  key_name   = "ass2keypair"
-  public_key = file("ass2keypair.pem")
-}
-
 resource "aws_instance" "app" {
   ami           = "ami-0e812285fd54f7620"
   instance_type = "t2.micro"
-  key_name      = aws_key_pair.my_key.key_name
+  key_name      = ass2keypair
 
   tags = {
     Name = "ExampleAppServerInstance"
