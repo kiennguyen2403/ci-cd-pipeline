@@ -17,7 +17,7 @@ services:
 
 
   frontend:
-    image: tuandoan1411/web3-trading-platform-frontend:v1
+    image: kiennguyen/ci-cd:latest
     ports:
       - "3000:3000"  # Expose the frontend port
     depends_on:
