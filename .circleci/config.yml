@@ -118,7 +118,6 @@ jobs:
           command: |
             cd terraform
             AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY terraform apply -auto-approve
-
   #     - run:
   #         name: Deploy Application into Infrastructure
   #         command: |
@@ -138,26 +137,26 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      # - test_frontend:
-      #     filters:
-      #       branches:
-      #         only: main
-      # - build_application:
-      #     requires:
-      #       - test_frontend
-      #       - test_backend
-      #     filters:
-      #       branches:
-      #         only: main
-      - deploy_infrastructure:
-          # requires:
-          #   - build_application
+      - test_frontend:
           filters:
             branches:
               only: main
-      # - deploy_application:
-      #     requires:
-      #       - build_application
-      #     filters:
-      #       branches:
-      #         only: main
+      - build_application:
+          requires:
+            - test_frontend
+            - test_backend
+          filters:
+            branches:
+              only: main
+      - deploy_infrastructure:
+          requires:
+            - build_application
+          filters:
+            branches:
+              only: main
+      - deploy_application:
+          requires:
+            - build_application
+          filters:
+            branches:
+              only: main

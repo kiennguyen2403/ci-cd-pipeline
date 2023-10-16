@@ -68,7 +68,7 @@ resource "null_resource" "docker_run" {
   }
 
   provisioner "file" {
-    source      = "../docker/docker-compose.yml"  # Replace with your Docker Compose file
+    source      = "./docker/docker-compose.yml"  # Replace with your Docker Compose file
     destination = "/home/ec2-user/docker-compose.yml"
   }
   # comment
